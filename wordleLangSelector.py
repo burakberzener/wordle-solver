@@ -11,7 +11,7 @@ class Database:
 
 class FirstWord:
     TR = "sakin"
-    ENG = "cares"
+    ENG = "sores"
 
 def chooseLanguage(lang):
     

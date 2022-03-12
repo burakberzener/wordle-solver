@@ -24,7 +24,14 @@ class wordleSolverClass:
             .querySelectorAll('game-tile')
             """.format(row))]
 
-    def getGameState(self, driver):
-        return driver.execute_script('return JSON.parse(localStorage.gameState).gameStatus')
+    def getGameState(self, driver, LANG):
+        if LANG == "ENG":
+            return driver.execute_script('return JSON.parse(localStorage.getItem("nyt-wordle-state")).gameStatus')
+        elif LANG == "TR":
+            return driver.execute_script('return JSON.parse(localStorage.gameState).gameStatus')
 
-  
+    def getGameStats(self, driver, LANG):
+        if LANG == "ENG":
+            return driver.execute_script('return JSON.parse(localStorage.getItem("nyt-wordle-statistics"))')
+        elif LANG == "TR":
+            return driver.execute_script('return JSON.parse(localStorage.statistics)')

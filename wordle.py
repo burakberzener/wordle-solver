@@ -14,6 +14,7 @@ import pandas as pd
 import wordlesolver
 import wordleLangSelector
 import wordleParams
+import popularWordFinder
 
 letters_guessing_word = ["","","","",""]
 letters_correct = []
@@ -23,6 +24,7 @@ letters_dictionary = dict.fromkeys(string.ascii_lowercase, 0)
 
 EVALUATION = "evaluation"
 LETTER = "letter"
+LANG = "TR"
 
 wordleparams = wordleParams.wordleParamsClass()
 df = pd.DataFrame()
@@ -40,12 +42,19 @@ def browserOptions():
     
     return chrome_options
 
+def browserService():
+    if platform.system() == "Windows":
+        return Service(ChromeDriverManager().install())
+    elif platform.system() == "Linux":
+        return Service("/usr/lib/chromium-browser/chromedriver")
+
 def init():   
     wordleparams.row = 0
-    wordleparams.url, wordleparams.word_database, wordleparams.first_word = wordleLangSelector.chooseLanguage("TR")
+    wordleparams.url, wordleparams.word_database, wordleparams.first_word = wordleLangSelector.chooseLanguage(LANG)
 
 def main():
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), chrome_options=browserOptions())
+    driver = webdriver.Chrome(service=browserService(), chrome_options=browserOptions())
+    driver.set_window_position(880, 0, windowHandle ='current')
     driver.get(wordleparams.url)
     wordleparams.html_body = driver.find_element(by = By.XPATH, value="/html/body")
     
@@ -60,15 +69,18 @@ def main():
     print(df.size)
     
     wordleSolver = wordlesolver.wordleSolverClass(wordleparams.url, wordleparams.html_body)
-    guessed_word = wordleparams.first_word
+    guessed_word = popularWordFinder.findWordsRanks(df)
 
     while(len(letters_correct)<5):
+
+        popularWordFinder.showLetterStatistics(df, guessed_word)
+        sleep(1)
 
         wordleSolver.tryWord(guessed_word)
         text_in_row = wordleSolver.getRowsAttribute(driver, wordleparams.row, EVALUATION)
 
-        wordleparams.game_state = wordleSolver.getGameState(driver)
-
+        wordleparams.game_state = wordleSolver.getGameState(driver, LANG)
+        print(wordleparams.game_state)
         if wordleparams.game_state == 'IN_PROGRESS':
             pass
         elif wordleparams.game_state == 'WIN':
@@ -110,22 +122,25 @@ def main():
         print(df.size)
         sleep(1)
 
-        guessed_word = df["word"].iloc[0]
+        #guessed_word = df["word"].iloc[0]
+        df = df.reset_index(drop=True)
+        filepath = "./out.csv"
+        df["word"].to_csv(filepath)
+        guessed_word = popularWordFinder.findWordsRanks(df)
         print("guessed word: ", guessed_word, end="\n")
         sleep(1)
 
         wordleparams.row += 1
         
-
     if wordleparams.is_solved == True:
         print("Congratulations! You find the Word: ", guessed_word)
-        game_stats = driver.execute_script('return JSON.parse(localStorage.statistics)')
+        game_stats = wordleSolver.getGameStats(driver, LANG)
         f = open("result.json", "w")
         f.truncate(0)
         f.write(json.dumps(game_stats))
     else:
         print("Word is not found!")
-        
+
 init()
 if __name__ == "__main__":
     main()
