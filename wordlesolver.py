@@ -24,4 +24,7 @@ class wordleSolverClass:
             .querySelectorAll('game-tile')
             """.format(row))]
 
+    def getGameState(self, driver):
+        return driver.execute_script('return JSON.parse(localStorage.gameState).gameStatus')
+
   

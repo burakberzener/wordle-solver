@@ -5,16 +5,17 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 import numpy as np
 
-import wordleDatabases
+import wordleLangSelector
 
 figure(figsize=(16, 10), dpi=80)
+
 colors_1 = []
 colors_2 = []
 colors_3 = []
 colors_4 = []
 colors_5 = []
 
-filename = wordleDatabases.DATABASE_TR_JSON_1
+filename = wordleLangSelector.Database.DATABASE_TR_JSON_1
 
 if filename.endswith(".txt"):
     df = pd.read_csv(filename, names= ['word'])
