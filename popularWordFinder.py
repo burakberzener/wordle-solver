@@ -141,9 +141,11 @@ def showLetterStatistics(df: pd.DataFrame, popular_word: string):
     fig.canvas.draw()
     fig.canvas.flush_events()
     
+'''
 showLetterStatistics(df1, " ")
 
 guessed_word = findWordsRanks(df1)
 
 print(guessed_word)
 sleep(10)
+'''

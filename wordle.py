@@ -21,6 +21,7 @@ letters_correct = []
 letters_present = []
 letters_absent = []
 letters_dictionary = dict.fromkeys(string.ascii_lowercase, 0)
+tried_words = []
 
 EVALUATION = "evaluation"
 LETTER = "letter"
@@ -73,7 +74,7 @@ def main():
 
     while(len(letters_correct)<5):
 
-        popularWordFinder.showLetterStatistics(df, guessed_word)
+        #popularWordFinder.showLetterStatistics(df, guessed_word)
         sleep(1)
 
         wordleSolver.tryWord(guessed_word)
@@ -82,6 +83,7 @@ def main():
         wordleparams.game_state = wordleSolver.getGameState(driver, LANG)
         print(wordleparams.game_state)
         if wordleparams.game_state == 'IN_PROGRESS':
+            tried_words.append(guessed_word)
             pass
         elif wordleparams.game_state == 'WIN':
             wordleparams.is_solved = True
@@ -122,11 +124,11 @@ def main():
         print(df.size)
         sleep(1)
 
-        #guessed_word = df["word"].iloc[0]
+        guessed_word = df["word"].iloc[0]
         df = df.reset_index(drop=True)
         filepath = "./out.csv"
         df["word"].to_csv(filepath)
-        guessed_word = popularWordFinder.findWordsRanks(df)
+        #guessed_word = popularWordFinder.findWordsRanks(df)
         print("guessed word: ", guessed_word, end="\n")
         sleep(1)
 
@@ -137,7 +139,10 @@ def main():
         game_stats = wordleSolver.getGameStats(driver, LANG)
         f = open("result.json", "w")
         f.truncate(0)
-        f.write(json.dumps(game_stats))
+        result = json.dumps(game_stats)
+        result.join({"Guessed Word": guessed_word,
+                     "Tried Word:": tried_words})
+        f.write(result)
     else:
         print("Word is not found!")
 

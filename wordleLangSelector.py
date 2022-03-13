@@ -6,6 +6,7 @@ class URL:
 
 class Database:
     DATABASE_TR_JSON_1 = "./Databases/TRwordlist.json"
+    DATABASE_TR_TXT_BUNDLE = "./Databases/TRwordlist_bundle.txt"
     DATABASE_ENG_TXT_1 = "./Databases/ENGwordlist.txt"
     DATABASE_ENG_TXT_2 = "./Databases/ENGwordlist2.txt"
 
