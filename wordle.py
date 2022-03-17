@@ -16,6 +16,13 @@ import wordleLangSelector
 import wordleParams
 import popularWordFinder
 
+#TODO
+#add file path for linux system - os.path...
+#update dataset to original ones
+
+#FIXME
+#turkish letters not work with the script
+
 letters_guessing_word = ["","","","",""]
 letters_correct = []
 letters_present = []
@@ -25,7 +32,7 @@ tried_words = []
 
 EVALUATION = "evaluation"
 LETTER = "letter"
-LANG = "TR"
+LANG = "ENG"
 
 wordleparams = wordleParams.wordleParamsClass()
 df = pd.DataFrame()
@@ -74,7 +81,7 @@ def main():
 
     while(len(letters_correct)<5):
 
-        #popularWordFinder.showLetterStatistics(df, guessed_word)
+        popularWordFinder.showLetterStatistics(df, guessed_word)
         sleep(1)
 
         wordleSolver.tryWord(guessed_word)
@@ -124,11 +131,11 @@ def main():
         print(df.size)
         sleep(1)
 
-        guessed_word = df["word"].iloc[0]
+        #guessed_word = df["word"].iloc[0]
         df = df.reset_index(drop=True)
         filepath = "./out.csv"
         df["word"].to_csv(filepath)
-        #guessed_word = popularWordFinder.findWordsRanks(df)
+        guessed_word = popularWordFinder.findWordsRanks(df)
         print("guessed word: ", guessed_word, end="\n")
         sleep(1)
 
@@ -139,9 +146,9 @@ def main():
         game_stats = wordleSolver.getGameStats(driver, LANG)
         f = open("result.json", "w")
         f.truncate(0)
+        game_stats["guessedWord"] = guessed_word
+        game_stats["triedWords"] = tried_words
         result = json.dumps(game_stats)
-        result.join({"Guessed Word": guessed_word,
-                     "Tried Word:": tried_words})
         f.write(result)
     else:
         print("Word is not found!")

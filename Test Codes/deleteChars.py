@@ -1,5 +1,5 @@
-fin = open("./Databases/TRwordlist_bundle.txt", 'r')
-fout = open("./Databases/TRwordlist_bundle_cleared.txt", 'w')
+fin = open("./Databases/ENGwordlist_nytimes.txt", 'r')
+fout = open("./Databases/ENGwordlist_nytimes_cleared.txt", 'w')
 fin.seek(0)
 lines = fin.readlines()
 

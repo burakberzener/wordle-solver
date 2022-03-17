@@ -9,6 +9,7 @@ class Database:
     DATABASE_TR_TXT_BUNDLE = "./Databases/TRwordlist_bundle.txt"
     DATABASE_ENG_TXT_1 = "./Databases/ENGwordlist.txt"
     DATABASE_ENG_TXT_2 = "./Databases/ENGwordlist2.txt"
+    DATABASE_ENG_TXT_NYTIMES = "./Databases/ENGwordlist_nytimes.txt"
 
 class FirstWord:
     TR = "sakin"
@@ -22,7 +23,7 @@ def chooseLanguage(lang):
         first_word = FirstWord.TR
     elif lang == "ENG":
         url = URL.ENG
-        word_database = Database.DATABASE_ENG_TXT_2
+        word_database = Database.DATABASE_ENG_TXT_NYTIMES
         first_word = FirstWord.ENG
 
     return url, word_database, first_word
